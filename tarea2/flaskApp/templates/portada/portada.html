@@ -1,0 +1,43 @@
+{% extends 'portada/base.html' %}
+
+{% block css %}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/portada.css') }}"
+    />
+{% endblock %}
+
+{% block content %}
+
+    <div class="lista-avisos-adopcion">
+        <h1>¡Echa un vistazo a los últimos 5 avisos de adopcion publicados!</h1>
+        {% if data %}
+            <table>
+                <tr>
+                    <th>Fecha de publicación</th>
+                    <th>Comuna</th>
+                    <th>Sector</th>
+                    <th>Cantidad</th>
+                    <th>Tipo</th>
+                    <th>Edad</th>
+                    <th>Foto</th>
+                </tr>
+                {% for aviso in data%}
+                <tr>
+                    <td>{{aviso.fecha_publicacion}}</td>
+                    <td>{{aviso.comuna}}</td>
+                    <td>{{aviso.sector}}</td>
+                    <td>{{aviso.cantidad}}</td>
+                    <td>{{aviso.tipo}}</td>
+                    <td>{{aviso.edad}}</td>
+                    <td><img src={{aviso.foto}} alt="" width="250"></td>
+                </tr>
+                {% endfor%}
+            </table>
+        
+        {% else%}
+            <p>Lo sentimos, por ahora no hay ningún aviso de adopción.</p>    
+        
+        {% endif%}
+    </div>
+{% endblock content%}

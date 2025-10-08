@@ -1,0 +1,109 @@
+{% extends 'detalle_aviso_adopcion/base.html' %}
+
+{% block css %}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/portada.css') }}"
+    />
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/t1.css') }}"
+    />
+{% endblock %}
+
+{% block content%}
+
+<h1>¡Echa un vistazo a los detalles del siguiente aviso de adopción! </h1>
+
+<div id="informacion_aviso">
+    {% if datos%}
+        <p>Aquí podrás conocer a un animalito que busca un hogar lleno de amor. Cada ficha te ofrece información completa sobre su edad, raza,
+        carácter y necesidades especiales, para ayudarte a encontrar al compañero ideal. Explora, conoce y déjate sorprender por estos
+        amigos que están listos para convertirse en parte de tu familia. ¡Dales la oportunidad de un nuevo comienzo!</p>
+        
+        <table class="tabla_detalle_aviso">
+            <tr>
+                <th>Campo</th>
+                <th>Información</th>
+            </tr>
+            <tr>
+                <td>Especie</td>
+                <td>{{datos[0].tipo}}</td>
+            </tr>
+            <tr>
+                <td>Edad</td>
+                <td>{{datos[0].edad}}</td>
+            </tr> 
+            <tr>
+                <td>Cantidad</td>
+                <td>{{datos[0].cantidad}} </td>
+            </tr>
+            {% if datos[0].descripcion%}
+                <tr>
+                    <td>Descripción</td>
+                    <td>{{datos[0].descripcion}}</td>
+                </tr>
+            {% endif%}
+            <tr>
+                <td>Region</td>
+                <td>{{datos[0].region}}</td>
+            </tr>
+            <tr>
+                <td>Comuna</td>
+                <td>{{datos[0].comuna}}</td>
+            </tr>
+            {% if datos[0].sector%}
+                <tr>
+                    <td>Sector</td>
+                    <td>{{datos[0].sector}} </td>
+                </tr>
+            {% endif%}
+            <tr>
+                <td>Fecha de publicación</td>
+                <td>{{datos[0].fecha_publicacion}}</td>
+            </tr>
+            <tr>
+                <td>Fecha de entrega</td>
+                <td>{{datos[0].fecha_entrega}}</td>
+            </tr>
+            <tr>
+                <td>Nombre del contacto</td>
+                <td>{{datos[0].nombre}}</td>
+            </tr>
+            {% if datos[0].telefono%}
+                <tr>
+                    <td>Telefono</td>
+                    <td>{{datos[0].telefono}} </td>
+                </tr>
+            {% endif%}
+            <tr>
+                <td>Correo electronico</td>
+                <td>{{datos[0].correo}}</td>
+            </tr>
+            <tr>
+                <td>Contactar por</td>
+                <td>
+                    {% for dato_contacto in datos_contacto%}
+                        {{ dato_contacto.plataforma ~ ' - ' ~ dato_contacto.contacto }}<br>
+                    {%endfor%}
+                </td>
+            </tr>
+        </table>
+        <div class="contenedor-animal">
+            {%for foto in datos_fotos%}
+                <img src="{{foto.url}}" alt="foto" class="imagen-animal">
+            {%endfor%}
+        </div>
+        <div class="modal" id="modal">
+            <span class="close" id="closeBtn">&times;</span>
+            <img class="modal-content" id="modalImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Imagen ampliada">
+        </div>
+    {% endif%}
+
+</div>
+
+{% endblock content%}
+
+{% block javascript %}
+    <script lang="javascript" src="{{ url_for('static', filename='js/detalle_aviso.js') }}"></script>
+{% endblock %}

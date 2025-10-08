@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Nuevo aviso de adopción{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/portada.css') }}">
+</head>
+<body>
+    <header>
+        <h1><strong>¡Agrega un nuevo aviso de adopción!</strong></h1>
+        <nav class="navbar">
+            <a class="navbar-page" href="{{ url_for('avisos_recientes') }}">Página de inicio</a>
+            <a class="navbar-page" href="{{ url_for('listado_avisos') }}">Ver listado de adopciones</a>
+            <a class="navbar-page">Estadística</a>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+{% block javascript %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,60 @@
+{% extends 'listado_aviso_adopcion/base.html' %}
+
+{% block css %}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/portada.css') }}"
+    />
+{% endblock %}
+
+{% block content %}
+
+    <div class="lista-avisos-adopcion-2">
+        <h1>¡Echa un vistazo a todos los avisos de publicación disponibles en nuestra página!</h1>
+        {%if datos %}
+            <table>
+                <tr>
+                    <th>Fecha de publicación</th>
+                    <th>Fecha de entrega</th>
+                    <th>Comuna</th>
+                    <th>Sector</th>
+                    <th>Cantidad</th>
+                    <th>Especie</th>
+                    <th>Edad</th>
+                    <th>Nombre</th>
+                    <th>Contacto</th>
+                    <th>Total fotos</th>
+                </tr>
+                {% for aviso in datos%}
+                <tr onclick="location.href='{{ url_for('detalle_aviso', ID=aviso.id) }}'">
+                    <td>{{aviso.fecha_publicacion}}</td>
+                    <td>{{aviso.fecha_entrega}}</td>
+                    <td>{{aviso.comuna}}</td>
+                    <td>{{aviso.sector}}</td>
+                    <td>{{aviso.cantidad}}</td>
+                    <td>{{aviso.tipo}}</td>
+                    <td>{{aviso.edad}}</td>
+                    <td>{{aviso.nombre}}</td>
+                    <td>{{aviso.contacto}}</td>
+                    <td>{{aviso.total_fotos}}</td>
+                </tr>
+                {% endfor%}
+            </table>
+
+        {% else%}
+            <p>Lo sentimos, por ahora no hay publicaciones de adopción.</p>
+
+        {% endif%}
+
+        <div class="paginacion">
+            {% if pag_ant %}
+                <a href="{{ url_for('listado_avisos', page=pag_ant) }}">Anterior</a>
+            {% endif %}
+                <span>Página {{pagina}}</span>
+            {% if pag_sig %}
+                <a href="{{ url_for('listado_avisos', page=pag_sig) }}">Siguiente</a>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock content%}
