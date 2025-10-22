@@ -63,6 +63,16 @@ class Contactar_por(Base):
     identificador = Column(String(150), nullable=False)
     aviso_id = Column(BigInteger, ForeignKey('aviso_adopcion.id'), nullable=False)
 
+# Agregamos nueva tabla de comentarios
+class Comentario(Base):
+    __tablename__='comentario'
+
+    id= Column(BigInteger, primary_key=True, autoincrement=True)
+    nombre= Column(String(80), nullable=False)
+    texto= Column(String(200), nullable=False)
+    fecha= Column(Datetime, nullable=False)
+    aviso_id= Column(BigInteger, ForeignKey('aviso_adopcion.id'), nullable=False)
+
 # ___ FUNCIONES DE LA BASE DE DATOS ___
 
 # Añade un nuevo aviso a la tabla 'Avisos_adopcion'.
