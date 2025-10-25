@@ -23,34 +23,3 @@ for (let i = 0; i < imagenes.length; i++) {
   }
 }
 
-/*
-copito1.onclick = function() {
-  modal.style.display = "block";
-  modalImg.src = this.src;
-}
-
-closeBtn.onclick = function() {
-  modal.style.display = "none";
-}
-
-modal.onclick = function(e) {
-  if (e.target === modal) {
-    modal.style.display = "none";
-  }
-}
-
-copito2.onclick = function() {
-  modal.style.display = "block";
-  modalImg.src = this.src;
-}
-
-closeBtn.onclick = function() {
-  modal.style.display = "none";
-}
-
-modal.onclick = function(e) {
-  if (e.target === modal) {
-    modal.style.display = "none";
-  }
-}
-*/

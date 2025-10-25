@@ -1,5 +1,5 @@
-from flask import Flask, request, render_template, redirect, url_for, session
-#from utils.validations import validate_login_user, validate_register_user, validate_confession
+from flask import Flask, request, render_template, redirect, url_for, session, jsonify
+from flask_cors import cross_origin
 from database import db
 from werkzeug.utils import secure_filename
 import hashlib
@@ -63,7 +63,6 @@ def post_aviso():
 
         # Antes de añadir los datos proporcionados a la base de datos, se pasan por validación.
         if val.validacion_general(datos) and db.validacion_id_region(id_region) and db.validacion_id_comuna(id_comuna):
-            print("HOLA")
 
             # Validaciones correctas, entonces añadimos el nuevo aviso a la base de datos. Obtenemos el id del aviso 
             # para asociarlo a la base de datos de las fotos.
@@ -218,7 +217,94 @@ def detalle_aviso():
     })
 
     # Mandamos todo al template para presentar la información.
-    return render_template('detalle_aviso_adopcion/detalle_aviso.html', datos_fotos=datos_fotos, datos_contacto=datos_contacto, datos=datos)
+    return render_template('detalle_aviso_adopcion/detalle_aviso.html', datos_fotos=datos_fotos, datos_contacto=datos_contacto, datos=datos, id_aviso=id_aviso)
+
+# Agrega comentario a la base de datos
+@app.route('/agregar_comentario', methods=["POST"])
+@cross_origin(origin='127.0.0.1', supports_credentials=True)
+def agregar_comentario():
+    id_aviso = request.form.get("id_aviso", type=int)
+    nombre = request.form.get("nombre_coment")
+    texto = request.form.get("texto_coment")
+
+    if not val.validacion_comentario(nombre, texto):
+        return jsonify({"error": "Datos inválidos"}), 400
+
+    fecha = db.create_comentario(id_aviso, nombre, texto)
+
+    return jsonify({
+        "comentario": {
+            "nombre": nombre,
+            "texto": texto,
+            "fecha": fecha
+        }
+    })
+
+@app.route('/get-comentarios-data', methods=["GET"])
+@cross_origin(origin='127.0.0.1', supports_credentials=True)
+def obtener_comentarios():
+    id_aviso = request.args.get('id_aviso', type=int)
+
+    comentarios = db.get_comentarios_by_id(id_aviso)
+
+    print(comentarios)
+
+    data = [
+        {
+            "nombre": comentario.nombre,
+            "texto": comentario.texto,
+            "fecha": comentario.fecha
+        } 
+        for comentario in comentarios
+    ]
+
+    return jsonify(data)
+    
+
+@app.route('/stats', methods=["GET"])
+def estadisticas():
+    return render_template('estadisticas_aviso_adopcion/estadisticas.html')
+
+@app.route('/get-stats-data', methods=["GET"])
+@cross_origin(origin='127.0.0.1', supports_credentials=True)
+def obtener_datos_estadistica():
+    # Obtenemos los datos de la BD
+    avisos_diarios, total_perros_gatos, perros_gatos_mensual = db.get_estadisticas()
+
+    # Datos 1er gráfico
+    data_avisos_diarios = [
+        {'fecha': str(fecha), 'cantidad': cantidad}
+        for fecha, cantidad in avisos_diarios
+    ]
+
+    # Datos 2do gráfico
+    data_total_perros_gatos = [
+        {
+            'cantidad_total_perros': total_perros_gatos.cantidad_perros,
+            'cantidad_total_gatos': total_perros_gatos.cantidad_gatos
+        }
+    ]
+
+    # Datos 3er gráfico
+    data_perros_gatos_mensual = [
+        {
+            'fecha': str(fecha),
+            'cantidad_gatos': cantidad,
+            'cantidad_perros': tipo
+        }
+        for fecha, tipo, cantidad in perros_gatos_mensual
+    ]
+
+    # Comprimimos a un solo coso
+    data = {
+        'data_avisos_diarios': data_avisos_diarios,
+        'data_total_perros_gatos': data_total_perros_gatos,
+        'data_perros_gatos_mensual': data_perros_gatos_mensual
+    }
+
+    return jsonify(data)
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

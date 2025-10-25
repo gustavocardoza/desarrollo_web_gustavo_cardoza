@@ -166,3 +166,6 @@ def validacion_general(data):
         validacion_fecha(data.get("fecha")) and
         validacion_imagenes(data.get("imagenes"))
     )
+
+def validacion_comentario(nombre, comentario):
+    return nombre and (len(nombre)>=3) and (len(nombre)<=80) and (len(comentario)>=5)

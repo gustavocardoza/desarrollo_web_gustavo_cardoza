@@ -99,11 +99,27 @@
             <img class="modal-content" id="modalImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Imagen ampliada">
         </div>
     {% endif%}
-
 </div>
+<div class="form_comentario">
+    <form id="form_comentario">
+        <h3>¡Agrega un comentario!</h3>
+        <section>
+            <input type="hidden" id="id_aviso" value="{{id_aviso}}" name="id_aviso">
+            <label for="nombre_coment">Nombre</label>
+            <input type="text" minlength="3" maxlength="80" id="nombre_coment" required name="nombre_coment">
+
+            <label>Ingresa tu comentario</label>
+            <textarea name="texto_coment" id="text_coment" cols="50" rows="4" required></textarea>
+            <button id="boton_agregar_coment" type="button">Agregar comentario</button>
+        </section>
+    </form>
+</div>
+<h3>Comentarios</h3>
+<div id="lista_comentarios"></div>
 
 {% endblock content%}
 
 {% block javascript %}
     <script src="{{ url_for('static', filename='js/detalle_aviso.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/validacion_comentario.js') }}"></script>
 {% endblock %}

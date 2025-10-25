@@ -1,0 +1,40 @@
+{% extends 'estadisticas_aviso_adopcion/base.html' %}
+
+{% block css %}
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/portada.css') }}"
+    />
+{% endblock %}
+
+{% block content %}
+
+<h1>¡Echa un vistazo a las estadísticas de nuestra página!</h1>
+<div class="stats-container">
+    <figure class="highcharts-figure">
+        <div id="container1"></div>
+        <p class="highcharts-description">
+            El anterior gráfico presenta el numero de aviso de adopción subidos diariamente.
+        </p>
+    </figure>
+
+    <figure class="highcharts-figure">
+        <div id="container2"></div>
+        <p class="highcharts-description">
+            El anterior gráfico presenta la proporción entre avisos subidos de gatos y perros.
+        </p>
+    </figure>
+
+    <figure class="highcharts-figure">
+        <div id="container3"></div>
+        <p class="highcharts-description">
+            El anterior gráfico presenta el numero avisos de adopción de perros y gatos mensualmente.
+        </p>
+    </figure>
+</div>
+{% endblock content %}
+
+{% block javascript %}
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="{{url_for('static', filename='js/estadistica.js')}}"></script>
+{% endblock %}

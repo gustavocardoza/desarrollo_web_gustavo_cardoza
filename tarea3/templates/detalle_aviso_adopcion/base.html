@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Nuevo aviso de adopción{% endblock %}</title>
+    <title>{% block title %}Detalles de adopcion{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/portada.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/t1.css') }}">
 </head>
 <body>
     <header>
-        <h1><strong>¡Agrega un nuevo aviso de adopción!</strong></h1>
+        <h1>Detalle aviso</h1>
         <nav class="navbar">
             <a class="navbar-page" href="{{ url_for('avisos_recientes') }}">Página de inicio</a>
             <a class="navbar-page" href="{{ url_for('listado_avisos') }}">Ver listado de adopciones</a>
-            <a class="navbar-page">Estadística</a>
+            <a class="navbar-page" href="{{ url_for('estadisticas') }}">Estadística</a>
         </nav>
     </header>
 

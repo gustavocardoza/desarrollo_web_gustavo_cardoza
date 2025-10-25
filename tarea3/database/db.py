@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, Integer, BigInteger, String, ForeignKey, DateTime, Enum, func
+from sqlalchemy import create_engine, Column, Integer, BigInteger, String, ForeignKey, DateTime, Enum, func, case
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 from datetime import date, datetime
 
@@ -63,14 +63,13 @@ class Contactar_por(Base):
     identificador = Column(String(150), nullable=False)
     aviso_id = Column(BigInteger, ForeignKey('aviso_adopcion.id'), nullable=False)
 
-# Agregamos nueva tabla de comentarios
 class Comentario(Base):
     __tablename__='comentario'
 
     id= Column(BigInteger, primary_key=True, autoincrement=True)
     nombre= Column(String(80), nullable=False)
     texto= Column(String(200), nullable=False)
-    fecha= Column(Datetime, nullable=False)
+    fecha= Column(DateTime, nullable=False)
     aviso_id= Column(BigInteger, ForeignKey('aviso_adopcion.id'), nullable=False)
 
 # ___ FUNCIONES DE LA BASE DE DATOS ___
@@ -106,6 +105,23 @@ def create_contactar_por(metodo_contacto, detalle_contacto, aviso_id):
     session.add(nuevo_contactar_por)
     session.commit()
     session.close()
+
+# Añade un nuevo comentario a la base de datos de comentarios
+def create_comentario(id, nombre, texto):
+    fecha_comentario = datetime.now()
+    session = SessionLocal()
+    nuevo_comentario = Comentario(nombre=nombre, texto=texto, fecha=fecha_comentario, aviso_id=id)
+    session.add(nuevo_comentario)
+    session.commit()
+    session.close()
+    # hacemos q retorne la fecha para conveniencia
+    return fecha_comentario
+
+def get_comentarios_by_id(id):
+    session = SessionLocal()
+    comentarios = session.query(Comentario).filter_by(aviso_id=id).all()
+    session.close()
+    return comentarios
 
 # Obtiene los 'n' avisos de adopción mas recientes de la tabla 'Avisos_adopcion'
 def get_avisos_adopcion(n):
@@ -180,3 +196,44 @@ def validacion_id_comuna(id_comuna):
     if flag:
         return True
     return False
+
+# Obtenemos datos para la pestaña de estadisticas.
+def get_estadisticas():
+    session = SessionLocal()
+
+    # 1er gráfico: Cantidad de avisos por día.
+    query1 = (
+        session.query(
+            func.date(Aviso_adopcion.fecha_ingreso).label('fecha'),
+            func.count(Aviso_adopcion.id).label('cantidad_avisos')
+        )
+        .group_by(func.date(Aviso_adopcion.fecha_ingreso))
+        .order_by(func.date(Aviso_adopcion.fecha_ingreso))
+    )
+
+    avisos_por_dia = query1.all()
+
+    # 2do gráfico: Cantidad total de perros y gatos.
+    query = session.query(
+        func.sum(case((Aviso_adopcion.tipo == 'perro', 1), else_=0)).label('cantidad_perros'),
+        func.sum(case((Aviso_adopcion.tipo == 'gato', 1), else_=0)).label('cantidad_gatos')
+    ).one()
+
+    total_perros_gatos = query
+
+    # 3er gráfico: Cantidad perros y gatos por mes.
+    query = (
+    session.query(
+        func.date_format(Aviso_adopcion.fecha_ingreso, '%Y-%m').label('mes'),
+        func.sum(case((Aviso_adopcion.tipo == 'perro', 1), else_=0)).label('cantidad_perros'),
+        func.sum(case((Aviso_adopcion.tipo == 'gato', 1), else_=0)).label('cantidad_gatos')
+        )
+        .group_by(func.date_format(Aviso_adopcion.fecha_ingreso, '%Y-%m'))
+        .order_by(func.date_format(Aviso_adopcion.fecha_ingreso, '%Y-%m'))
+    )
+    perros_gatos_mensual = query.all()
+
+    session.close()
+    return avisos_por_dia, total_perros_gatos, perros_gatos_mensual
+
+
