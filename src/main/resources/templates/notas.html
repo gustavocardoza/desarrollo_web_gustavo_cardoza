@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Notas de Avisos</title>
+
+    <!-- Vincular CSS -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <h1>
+        Notas
+    </h1>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Fecha publicación</th>
+        <th>Sector</th>
+        <th>Cantidad</th>
+        <th>Tipo</th>
+        <th>Edad</th>
+        <th>Comuna</th>
+        <th>Nota</th>
+        <th>Acción</th>
+    </tr>
+
+    <tr th:each="aviso : ${avisos}">
+        <td th:text="${aviso.id}"></td>
+        <td th:text="${aviso.fechaIngreso}"></td>
+        <td th:text="${aviso.sector}"></td>
+        <td th:text="${aviso.cantidad}"></td>
+        <td th:text="${aviso.tipoAnimal}"></td>
+        <td th:text="${aviso.unidadMedida}"></td>
+        <td th:text="${aviso.comuna_id}"></td>
+
+        <td th:id="'nota-promedio-' + ${aviso.id}"
+            th:text="${aviso.promedio != '-1' ? aviso.promedio : '-'}">
+        </td>
+
+        <td>
+            <button class="btn-evaluar" th:data-id="${aviso.id}">Evaluar</button>
+        </td>
+    </tr>
+</table>
+
+<script src="/js/nota.js"></script>
+
+</body>
+</html>
